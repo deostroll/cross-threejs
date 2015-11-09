@@ -40,6 +40,18 @@ function onPageLoad() {
   scene.add(liney, linex, linez);
   camera.position.set(30,30,30);
   camera.lookAt(new THREE.Vector3(0,0,0));
+
+  var geometry = new THREE.Geometry();
+  geometry.vertices.push(
+    new THREE.Vector3(0,0,0),
+    new THREE.Vector3(5, 0, 0),
+    new THREE.Vector3(5,5, 0),
+    new THREE.Vector3(0,5, 0)
+  );
+
+  var material = new THREE.LineBasicMaterial({ color: 0xefefef });
+  var ls = new THREE.LineSegments(geometry, material);
+  scene.add(ls);
   renderer.render(scene, camera);
 }
 
