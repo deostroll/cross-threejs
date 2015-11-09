@@ -46,37 +46,22 @@ function onPageLoad() {
   camera.lookAt(scene.position);
   var controls = new THREE.OrbitControls(camera, render.domElement);
 
-  // LIGHT
-	var light = new THREE.PointLight(0xffffff);
-	light.position.set(0,100,0);
-	scene.add(light);
+  var heartShape = new THREE.Shape();
 
-  var lineGeo = new THREE.Geometry();
-  var origin = new THREE.Vector3(0,0,0);
-  var lineMat = new THREE.LineBasicMaterial({ color: 0xefefef });
-  var shape = new THREE.Shape([
-    new THREE.Vector3(0,0,0),
-    new THREE.Vector3(25, 45, 10),
-    new THREE.Vector3(55, 15, 25)
-  ]);
+heartShape.moveTo( 25, 25 );
+heartShape.bezierCurveTo( 25, 25, 20, 0, 0, 0 );
+heartShape.bezierCurveTo( 30, 0, 30, 35,30,35 );
+heartShape.bezierCurveTo( 30, 55, 10, 77, 25, 95 );
+heartShape.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
+heartShape.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
+heartShape.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
 
-  var settings = {
-    amount: 10,
-    bevelEnabled: false,
-    material: 0,
-    extrudeMaterial: 1
-  };
+var extrudeSettings = { amount: 8, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
 
-  var exGeo = new THREE.ExtrudeGeometry(shape, settings);
-  var material = new THREE.MeshBasicMaterial({ color: 0xff8800 });
-  //
-  var obj = new THREE.Mesh(exGeo, material);
-  //scene.add(obj);
+var geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
 
-  var wfTexture = new THREE.MeshBasicMaterial({ color: 0xffffff , wireframe: true });
-  var wf = new THREE.Mesh(exGeo, wfTexture);
-  scene.add(wf);
-
+var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({ color: 0xffffff }) );
+scene.add(mesh);
   animate();
 
   function animate()
