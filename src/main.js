@@ -61,7 +61,7 @@ function onPageLoad() {
     new THREE.Vector3(35,45)
   );
   var segments = new THREE.LineSegments(lineGeo, lineMat);
-  // var shp = new THREE.Shape(segments);
+  var shp = new THREE.Shape(segments);
 
   scene.add(segments);
 
