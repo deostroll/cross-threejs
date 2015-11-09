@@ -54,16 +54,11 @@ function onPageLoad() {
   var lineGeo = new THREE.Geometry();
   var origin = new THREE.Vector3(0,0,0);
   var lineMat = new THREE.LineBasicMaterial({ color: 0xefefef });
-  lineGeo.vertices.push(
-    origin,
-    new THREE.Vector3(50,25, 0),
-    origin,
-    new THREE.Vector3(35,45)
-  );
-  var segments = new THREE.LineSegments(lineGeo, lineMat);
-  var shp = new THREE.Shape(segments);
-
-  scene.add(segments);
+  var shape = new THREE.Shape([
+    new THREE.Vector3(0,0,0),
+    new THREE.Vector3(25, 45, 10),
+    new THREE.Vector3(55, 15, 25)
+  ]);
 
   var settings = {
     amount: 10,
@@ -72,11 +67,16 @@ function onPageLoad() {
     extrudeMaterial: 1
   };
 
-  var exGeo = new THREE.ExtrudeGeometry(lineGeo, settings);
+  var exGeo = new THREE.ExtrudeGeometry(shape, settings);
   var material = new THREE.MeshBasicMaterial({ color: 0xff8800 });
-
+  //
   var obj = new THREE.Mesh(exGeo, material);
-  scene.add(obj);
+  //scene.add(obj);
+
+  var wfTexture = new THREE.MeshBasicMaterial({ color: 0xffffff , wireframe: true });
+  var wf = new THREE.Mesh(exGeo, wfTexture);
+  scene.add(wf);
+
   animate();
 
   function animate()
@@ -88,10 +88,10 @@ function onPageLoad() {
 
   function update()
   {
-  	if ( keyboard.pressed("z") )
-  	{
-  		// do something
-  	}
+  	// if ( keyboard.pressed("z") )
+  	// {
+  	// 	// do something
+  	// }
 
   	controls.update();
   	// stats.update();
