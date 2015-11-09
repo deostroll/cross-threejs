@@ -41,54 +41,42 @@ function onPageLoad() {
     linex = new THREE.Line(g2, m2),
     linez = new THREE.Line(g3, m3);
   scene.add(liney, linex, linez);
-  camera.position.set(0, 300, 400);
+  camera.position.set(-100,50,100);
   // camera.lookAt(new THREE.Vector3(0,0,0));
   camera.lookAt(scene.position);
   var controls = new THREE.OrbitControls(camera, render.domElement);
 
   // LIGHT
 	var light = new THREE.PointLight(0xffffff);
-	light.position.set(0,250,0);
+	light.position.set(0,100,0);
 	scene.add(light);
 
-  ////////////
-	// CUSTOM //
-	////////////
+  var lineGeo = new THREE.Geometry();
+  var origin = new THREE.Vector3(0,0,0);
+  var lineMat = new THREE.LineBasicMaterial({ color: 0xefefef });
+  lineGeo.vertices.push(
+    origin,
+    new THREE.Vector3(50,25, 0),
+    origin,
+    new THREE.Vector3(35,45)
+  );
+  var segments = new THREE.LineSegments(lineGeo, lineMat);
+  // var shp = new THREE.Shape(segments);
 
-	var starPoints = [];
+  scene.add(segments);
 
-	starPoints.push(new THREE.Vector2(0,0));
-  starPoints.push(new THREE.Vector2(100, 0));
-  starPoints.push(new THREE.Vector2(100, 100));
-  starPoints.push(new THREE.Vector2(0, 100));
-
-	var starShape = new THREE.Shape( starPoints );
-
-	var extrusionSettings = {
-		amount: 100,
+  var settings = {
+    amount: 10,
     bevelEnabled: false,
-		material: 0, extrudeMaterial: 0
-	};
+    material: 0,
+    extrudeMaterial: 1
+  };
 
-	var starGeometry = new THREE.ExtrudeGeometry( starShape, extrusionSettings );
+  var exGeo = new THREE.ExtrudeGeometry(lineGeo, settings);
+  var material = new THREE.MeshBasicMaterial({ color: 0xff8800 });
 
-	var materialFront = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-	var materialSide = new THREE.MeshBasicMaterial( { color: 0xff8800 } );
-	var materialArray = [ materialFront, materialSide ];
-	var starMaterial = new THREE.MeshFaceMaterial(materialArray);
-
-	var star = new THREE.Mesh( starGeometry, starMaterial );
-	star.position.set(0,50,0);
-	scene.add(star);
-
-	// add a wireframe to model
-	var wireframeTexture = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } );
-	var star = new THREE.Mesh( starGeometry, wireframeTexture );
-	star.position.set(0,50,0);
-	// scene.add(star);
-
-  // renderer.render(scene, camera);
-
+  var obj = new THREE.Mesh(exGeo, material);
+  scene.add(obj);
   animate();
 
   function animate()
