@@ -209,6 +209,7 @@ function onPageLoad() {
   serpenski(2);
 
   renderer.render(scene, camera);
+  console.log('hello');
 }
 
 window.addEventListener('load', onPageLoad, false);
