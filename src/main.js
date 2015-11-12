@@ -7,39 +7,15 @@ function onPageLoad() {
   var renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-  var m1 = new THREE.LineBasicMaterial({
-    color: 0x0000ff
-  }),
-    m2 = new THREE.LineBasicMaterial({ color: 0xff0000 }),
-    m3 = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-  var g1 = new THREE.Geometry();
-  var origin = new THREE.Vector3(0,0,0);
-  g1.vertices.push(
-    origin,
-    new THREE.Vector3(0, 10, 0),
-    new THREE.Vector3(0, 20, 0)
-  );
+  var
+    dir = new THREE.Vector3(1,0,0),
+    origin = new THREE.Vector3(0,0,0);
 
-  var g2 = new THREE.Geometry();
-  g2.vertices.push(
-    origin,
-    new THREE.Vector3(10, 0, 0),
-    new THREE.Vector3(20, 0, 0)
-  );
-
-  var g3 = new THREE.Geometry();
-  g3.vertices.push(
-    origin,
-    new THREE.Vector3(0,0, 10),
-    new THREE.Vector3(0,0, 20)
-  );
-
-  var liney = new THREE.Line(g1, m1),
-    linex = new THREE.Line(g2, m2),
-    linez = new THREE.Line(g3, m3);
-  scene.add(liney, linex, linez);
-  camera.position.set(30,30,30);
-  camera.lookAt(new THREE.Vector3(0,0,0));
+  var xaxis = new THREE.ArrowHelper(dir, origin, 100, 0xffff00, 10,10);
+  //console.log(scene.position);
+  camera.position.z = 15; camera.position.x = -5;
+  camera.lookAt(scene.position);
+  scene.add(xaxis);
   renderer.render(scene, camera);
 }
 
