@@ -54,24 +54,33 @@ function onPageLoad() {
   var lineGeo = new THREE.Geometry();
   var origin = new THREE.Vector3(0,0,0);
   var lineMat = new THREE.LineBasicMaterial({ color: 0xefefef });
-  var shape = new THREE.Shape([
-    new THREE.Vector3(0,0,0),
-    new THREE.Vector3(25, 45, 10),
-    new THREE.Vector3(55, 15, 25)
-  ]);
-
+  var shape = new THREE.Shape();
+  shape.moveTo(0,0);
+  shape.lineTo(20, 0);
+  shape.lineTo(20,20);
+  shape.lineTo(0,20);
+  
   var settings = {
     amount: 10,
     bevelEnabled: false,
-    material: 0,
+    material: 1,
     extrudeMaterial: 1
   };
 
   var exGeo = new THREE.ExtrudeGeometry(shape, settings);
-  var material = new THREE.MeshBasicMaterial({ color: 0xff8800 });
+  //var material = new THREE.MeshBasicMaterial({ color: 0xff8800 });
   //
+
+  var material = new THREE.MeshFaceMaterial([
+    new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+    new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+    new THREE.MeshBasicMaterial({ color: 0x00000ff }),
+    new THREE.MeshBasicMaterial({ color: 0x00000ff })
+  ]);
   var obj = new THREE.Mesh(exGeo, material);
-  //scene.add(obj);
+  scene.add(obj);
 
   var wfTexture = new THREE.MeshBasicMaterial({ color: 0xffffff , wireframe: true });
   var wf = new THREE.Mesh(exGeo, wfTexture);
