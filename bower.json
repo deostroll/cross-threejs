@@ -14,5 +14,14 @@
   ],
   "dependencies": {
     "three.js": "threejs#*"
+  },
+  "overrides": {
+    "three.js" : {
+      "main": [
+        "build/three.js",
+        "examples/js/libs/stats.min.js",
+        "examples/js/libs/dat.gui.min.js"
+      ]
+    }
   }
 }
