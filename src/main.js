@@ -15,7 +15,20 @@ function onPageLoad() {
 
   var axes = new THREE.AxisHelper(10);
   scene.add(axes);
+  var shape = new THREE.Shape();
+  shape.moveTo(0,0);
+  shape.lineTo(20, 10);
+  shape.lineTo(5, 16);
+  shape.lineTo(0, 0);
 
+  var material = new THREE.MeshPhongMaterial({ color: 0xffff00 });
+  var shapeGeo = new THREE.ShapeGeometry(shape);
+  var mesh = new THREE.Mesh(shapeGeo, material);
+  mesh.position.z = 10;
+  console.log(mesh.position);
+  var light = new THREE.AmbientLight(0xffffff);
+  scene.add(light);
+  scene.add(mesh);
   //renderer.render(scene, camera);
   function animate() {
     requestAnimationFrame(animate);
