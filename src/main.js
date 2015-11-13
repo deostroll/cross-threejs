@@ -9,17 +9,20 @@ function onPageLoad() {
 
 
   document.body.appendChild(renderer.domElement);
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+  camera.position.set(0, 0, 15);
+  camera.lookAt(scene.position);
 
   var
     dir = new THREE.Vector3(1,0,0),
     origin = new THREE.Vector3(0,0,0);
 
-  var xaxis = new THREE.ArrowHelper(dir, origin, 100, 0xffff00, 10,10);
-  //console.log(scene.position);
-  camera.position.set(0, 0, 15);
-  camera.lookAt(scene.position);
-  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+  var xaxis = new THREE.ArrowHelper(dir, origin, 10, 0xffff00);
+  var yaxis = new THREE.ArrowHelper(new THREE.Vector3(0,1,0), origin, 10, 0xff0000);
+  var zaxis = new THREE.ArrowHelper(new THREE.Vector3(0,0,1), origin, 10, 0x0000ff);
+
   scene.add(xaxis);
+  scene.add(yaxis, zaxis);
 
   //renderer.render(scene, camera);
   function animate() {
@@ -35,7 +38,7 @@ function onPageLoad() {
     controls.update();
   }
 
-  requestAnimationFrame(render);
+  animate();
 }
 
 window.addEventListener('load', onPageLoad, false);
