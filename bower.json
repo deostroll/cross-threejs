@@ -14,5 +14,13 @@
   ],
   "dependencies": {
     "three.js": "threejs#*"
+  },
+  "overrides": {
+    "three.js": {
+      "main" : [
+        "build/three.js",
+        "examples/js/controls/OrbitControls.js"
+      ]
+    }
   }
 }
