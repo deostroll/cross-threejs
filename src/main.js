@@ -15,21 +15,17 @@ function onPageLoad() {
 
   var axes = new THREE.AxisHelper(10);
   scene.add(axes);
-  var shape = new THREE.Shape();
-  shape.moveTo(0,0);
-  shape.lineTo(20, 10);
-  shape.lineTo(5, 16);
-  shape.lineTo(0, 0);
 
-  var material = new THREE.MeshPhongMaterial({ color: 0xffff00 });
-  var shapeGeo = new THREE.ShapeGeometry(shape);
-  var mesh = new THREE.Mesh(shapeGeo, material);
-  mesh.position.z = 10;
-  console.log(mesh.position);
-  var light = new THREE.AmbientLight(0xffffff);
-  scene.add(light);
-  scene.add(mesh);
-  //renderer.render(scene, camera);
+  var cubeGeo = new THREE.BoxGeometry(3.5, 3.5, 3.5);
+  var side1 = new THREE.MeshBasicMaterial({ color: THREE.ColorKeywords['deeppink'] });
+  var side2 = new THREE.MeshBasicMaterial({ wireframe: false, color: THREE.ColorKeywords.cyan});
+  var side3 = new THREE.MeshBasicMaterial({ color: THREE.ColorKeywords['red']});
+
+  var mat = new THREE.MeshFaceMaterial([side1, side1, side2, side2, side3, side3]);
+  var cube = new THREE.Mesh(cubeGeo, mat);
+  cube.position.set(5, 5, 5);
+  scene.add(cube);
+
   function animate() {
     requestAnimationFrame(animate);
     render();
@@ -44,6 +40,7 @@ function onPageLoad() {
   }
 
   animate();
+  // render();
 }
 
 window.addEventListener('load', onPageLoad, false);
