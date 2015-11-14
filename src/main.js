@@ -16,26 +16,20 @@ function onPageLoad() {
   var axes = new THREE.AxisHelper(10);
   scene.add(axes);
   var light = new THREE.AmbientLight(0xffffff);
-  var shape = new THREE.Shape();
-  shape.moveTo(5,5);
-  shape.lineTo(7, 5);
-  shape.lineTo(7, 7);
-  shape.lineTo(5, 7);
-  shape.lineTo(5, 5);
 
-  var exGeo = shape.extrude({
-    amount:2,
-    step: 4,
-    bevelEnabled: false
-  });
-  var m1 = new THREE.MeshBasicMaterial({ wireframe: true, skinning: false });
-  var m2 = new THREE.MeshBasicMaterial({ color: 0x00eeff });
+  var rectLength = 15, rectWidth = 7;
 
+  var rectShape = new THREE.Shape();
+  rectShape.moveTo( 0,0 );
+  rectShape.lineTo( 0, rectWidth );
+  rectShape.lineTo( rectLength, rectWidth );
+  rectShape.lineTo( rectLength, 0 );
+  rectShape.lineTo( 0, 0 );
 
-  var mat = new THREE.MeshFaceMaterial([ m2, m1]);
-
-  var mesh = new THREE.Mesh(exGeo, mat);
-  scene.add(mesh, light);
+  var rectGeom = new THREE.ShapeGeometry( rectShape );
+  var rectMesh = new THREE.Mesh( rectGeom, new THREE.MeshPhongMaterial( { color: 0xff0000, side:THREE.DoubleSide} ) ) ;
+  var light = new THREE.AmbientLight(0xffffff);
+  scene.add( rectMesh , light);
 
   function animate() {
     requestAnimationFrame(animate);
