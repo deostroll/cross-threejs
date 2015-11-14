@@ -16,27 +16,39 @@ function onPageLoad() {
   var axes = new THREE.AxisHelper(10);
   scene.add(axes);
   var light = new THREE.AmbientLight(0xffffff);
-  var shape = new THREE.Shape();
-  shape.moveTo(5,5);
-  shape.lineTo(7, 5);
-  shape.lineTo(7, 7);
-  shape.lineTo(5, 7);
-  shape.lineTo(5, 5);
 
-  var exGeo = shape.extrude({
-    amount:2,
-    step: 4,
-    bevelEnabled: false
+  var extrudeSettings = {
+      amount : 2,
+      steps : 1,
+      bevelEnabled: false,
+      curveSegments: 8
+  };
+
+  var triangleShape = new THREE.Shape();
+
+  triangleShape.moveTo(0,0);
+  triangleShape.lineTo(5,0);
+  triangleShape.lineTo(2.5, Math.sin(Math.PI/3) * 5);
+  triangleShape.lineTo(0,0);
+  var points = triangleShape.getPoints();
+  var delta = 0.05;
+  var holePath = new THREE.Path();
+  holePath.moveTo(delta, delta);
+  holePath.lineTo(5-delta, delta);
+  holePath.lineTo(2.5, Math.sin(Math.PI/3) * 5 - delta);
+  holePath.lineTo(delta, delta);
+  triangleShape.holes.push(holePath);
+
+  var exgeo = triangleShape.extrude({
+    amount: 8,
+    bevelEnabled: false,
   });
-  var m1 = new THREE.MeshBasicMaterial({ wireframe: true });
-  var m2 = new THREE.MeshBasicMaterial({ color: 0x00eeff, side: THREE.DoubleSide });
 
-
-  var mat = new THREE.MeshFaceMaterial([ m1, m2]);
-
-  var mesh = new THREE.Mesh(exGeo, mat);
-  scene.add(mesh, light);
-
+  var material = new THREE.MeshBasicMaterial({ color: 0xaaee00, wireframe: false });
+  var mesh = new THREE.Mesh(exgeo, material);
+  scene.add(mesh);
+  // console.log(triangleShape);
+  // console.log(points);
   function animate() {
     requestAnimationFrame(animate);
     render();
