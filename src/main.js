@@ -15,16 +15,21 @@ function onPageLoad() {
 
   var axes = new THREE.AxisHelper(10);
   scene.add(axes);
+  var light = new THREE.AmbientLight(0xffffff);
 
-  var cubeGeo = new THREE.BoxGeometry(3.5, 3.5, 3.5);
-  var side1 = new THREE.MeshBasicMaterial({ color: THREE.ColorKeywords['deeppink'] });
-  var side2 = new THREE.MeshBasicMaterial({ wireframe: false, color: THREE.ColorKeywords.cyan});
-  var side3 = new THREE.MeshBasicMaterial({ color: THREE.ColorKeywords['red']});
+  var rectLength = 15, rectWidth = 7;
 
-  var mat = new THREE.MeshFaceMaterial([side1, side1, side2, side2, side3, side3]);
-  var cube = new THREE.Mesh(cubeGeo, mat);
-  cube.position.set(5, 5, 5);
-  scene.add(cube);
+  var rectShape = new THREE.Shape();
+  rectShape.moveTo( 0,0 );
+  rectShape.lineTo( 0, rectWidth );
+  rectShape.lineTo( rectLength, rectWidth );
+  rectShape.lineTo( rectLength, 0 );
+  rectShape.lineTo( 0, 0 );
+
+  var rectGeom = new THREE.ShapeGeometry( rectShape );
+  var rectMesh = new THREE.Mesh( rectGeom, new THREE.MeshPhongMaterial( { color: 0xff0000, side:THREE.DoubleSide} ) ) ;
+  var light = new THREE.AmbientLight(0xffffff);
+  scene.add( rectMesh , light);
 
   function animate() {
     requestAnimationFrame(animate);
@@ -40,7 +45,6 @@ function onPageLoad() {
   }
 
   animate();
-  // render();
 }
 
 window.addEventListener('load', onPageLoad, false);
