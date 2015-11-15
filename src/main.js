@@ -28,7 +28,7 @@ function onPageLoad() {
   hp1.moveTo(l/4, l/4 * rt3);
   hp1.lineTo(3*l/4, l/4 * rt3);
   hp1.lineTo(l/4, l/4 * rt3);
-  triangleShape.holes.add(hp1);
+  triangleShape.holes.push(hp1);
   //triangleShape.lineTo(l/4, l * rt3/4);
   console.log(triangleShape);
   var exgeo = triangleShape.extrude({
