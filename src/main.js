@@ -259,7 +259,7 @@ function onPageLoad() {
   }
 
   serpenski(2);
-  cantor(2, [{x: 0, y:1}, {x: 20, y: 1}]);
+  cantor(2, [{x: 1, y:1}, {x: 21, y: 1}]);
   animate();
 
   function animate () {
