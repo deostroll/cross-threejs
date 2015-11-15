@@ -16,6 +16,14 @@ function onPageLoad() {
   var axes = new THREE.AxisHelper(10);
   scene.add(axes);
 
+  function serpenski(shape, level) {
+    if(level <= 0 ) return
+    var iter = 0;
+
+    while (iter < level) {
+
+    }
+  }
   //renderer.render(scene, camera);
   function animate() {
     requestAnimationFrame(animate);
