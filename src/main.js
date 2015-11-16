@@ -50,8 +50,8 @@ function onPageLoad() {
 
       var t2 = [
         m3x, m3y,
-        cx, cy,
-        m2x, m2y
+        m2x, m2y,
+        cx, cy
       ];
 
       var t3 = [
@@ -98,10 +98,24 @@ function onPageLoad() {
     var points = [
       p + d *(1 + 1/Math.sqrt(3)) , q + d ,
       p + l - d * Math.sqrt(3)    , q + d ,
-      p + l/2                     , q + l * Math.sqrt(3)/2 - d * (1 + Math.sqrt(3)/2 )
+      p + l/2                     , q + l * Math.sqrt(3)/2 - d * (1 + Math.sqrt(3)/2)
     ];
 
     return points;
+  };
+
+  var mat1 = new THREE.MeshBasicMaterial({ color: THREE.ColorKeywords['cyan']});
+  var mat2 = new THREE.MeshBasicMaterial({ color: THREE.ColorKeywords['grey']});
+  var getVector2Array = function(holePoints) {
+    var VArray = [];
+    for(var k = 0, l = holePoints.length; k < l; k+=2) {
+      VArray.push(new THREE.Vector2(holePoints[i], holePoints[i+1]));
+    }
+    return VArray;
+  };
+  var extrusionSettings = {
+    amount: 1,
+    bevelEnabled: false
   };
 
   for (var i = 0, triangles = result.triangles, j = triangles.length; i < j; i++) {
@@ -111,8 +125,24 @@ function onPageLoad() {
       shape.lineTo(pt[2], pt[3]);
       shape.lineTo(pt[4], pt[5]);
       shape.lineTo(pt[0], pt[1]);
-      var holePath = new THREE.HolePath();
-      
+      var holePoints = getHolePoints(pt, 0.05);
+      var VArray = getVector2Array(holePoints);
+      var holePath = new THREE.Path(VArray);
+      shape.holes.push(holePath);
+      var geo = shape.extrude(extrusionSettings);
+      var mesh = new THREE.Mesh(geo, mat1);
+
+      var inner = new THREE.Shape(VArray);
+      var innerHolePoints = getHolePoints(holePoints)
+      var innerVArray = getVector2Array(innerHolePoints);
+      var innerHolePath = new THREE.Path(innerVArray);
+      inner.holes.push(innerHolePath);
+
+      var innerGeo = shape.extrude(extrusionSettings);
+      var innerMesh = new THREE.Mesh(innerGeo, mat2);
+      innerMesh.translateX(5);
+      mesh.add(innerMesh);
+      scene.add(mesh);
   }
 
   //renderer.render(scene, camera);
