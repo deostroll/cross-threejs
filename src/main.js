@@ -93,8 +93,17 @@ function onPageLoad() {
   var result = serpenski(points, 2);
   var mesh = new THREE.Mesh();
   var getHolePoints = function(pts, d) {
-    
+    var p = pts[0], q = pts[1];
+    var l = Math.abs(p - pts[2]);
+    var points = [
+      p + d *(1 + 1/Math.sqrt(3)) , q + d ,
+      p + l - d * Math.sqrt(3)    , q + d ,
+      p + l/2                     , q + l * Math.sqrt(3)/2 - d * (1 + Math.sqrt(3)/2 )
+    ];
+
+    return points;
   };
+
   for (var i = 0, triangles = result.triangles, j = triangles.length; i < j; i++) {
       var pt = triangles[i];
       var shape = new THREE.Shape();
@@ -102,6 +111,8 @@ function onPageLoad() {
       shape.lineTo(pt[2], pt[3]);
       shape.lineTo(pt[4], pt[5]);
       shape.lineTo(pt[0], pt[1]);
+      var holePath = new THREE.HolePath();
+      
   }
 
   //renderer.render(scene, camera);
