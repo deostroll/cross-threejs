@@ -19,7 +19,8 @@ function onPageLoad() {
   function serpenski(shape, level) {
     if(level <= 0 ) return
     var iter = 0;
-
+    var invertedTriangles = [];
+    var regularTriangles = [];
     while (iter < level) {
 
     }
