@@ -118,6 +118,7 @@ function onPageLoad() {
     bevelEnabled: false
   };
   // debugger;
+  var group = new THREE.Mesh();
   for (var i = 0, triangles = result.triangles, j = triangles.length; i < j; i++) {
       var pt = triangles[i];
       //defining shape
@@ -145,12 +146,18 @@ function onPageLoad() {
 
       var innerGeo = inner.extrude(extrusionSettings);
       var innerMesh = new THREE.Mesh(innerGeo, mat2);
+      // var wireframe = new THREE.WireframeHelper(innerMesh, 0x0);
       // innerMesh.translateX(5);
-      //mesh.add(innerMesh);
-      scene.add(mesh);
-      scene.add(innerMesh);
+      // mesh.add(innerMesh);
+      // scene.add(mesh);
+      // scene.add(innerMesh);
+      // group.add(mesh, innerMesh, wireframe);
+      group.add(mesh, innerMesh);
   }
-
+  // var g = group.clone();
+  // g.rotateY(Math.PI/2);
+  scene.add(group);
+  // scene.add(g);
   //renderer.render(scene, camera);
   function animate() {
     requestAnimationFrame(animate);
