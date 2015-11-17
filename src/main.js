@@ -1,164 +1,3 @@
-function Triangle(p1, p2, p3) {
-  this.p1 = p1;
-  this.p2 = p2;
-  this.p3 = p3;
-}
-
-Triangle.prototype.to3D = function(plane) {
-  var p1 = this.p1, p2 = this.p2, p3 = this.p3;
-  var ret = null;
-  if(!plane) plane = 'xy';
-  switch (plane) {
-    case 'xy':
-      ret = [
-        new THREE.Vector3(p1.x, p1.y, 0),
-        new THREE.Vector3(p2.x, p2.y, 0),
-        new THREE.Vector3(p3.x, p3.y, 0)
-      ];
-      break;
-    case 'yz':
-      ret = [
-        new THREE.Vector3(0, p1.x, p1.y),
-        new THREE.Vector3(0, p2.x, p2.y),
-        new THREE.Vector3(0, p3.x, p3.y)
-      ];
-    case 'zx':
-      ret = [
-        new THREE.Vector3(p1.y, 0, p1.x),
-        new THREE.Vector3(p2.y, 0, p2.x),
-        new THREE.Vector3(p3.y, 0, p3.x)
-      ];
-      break;
-  }
-
-  return ret;
-}
-
-Triangle.prototype.getMidTriangle = function() {
-  var p1 = this.p1, p2 = this.p2, p3 = this.p3;
-  var fnMid = function(p, q, axis) {
-    var ret;
-    if(axis === 'x') {
-      return (p.x + q.x) / 2;
-    }
-    else {
-      return (p.y + q.y) / 2;
-    }
-  };
-  var
-    s1 = {
-      x: fnMid(p1, p2, 'x'),
-      y: fnMid(p1, p2, 'y')
-    },
-    s2 = {
-      x: fnMid(p2, p3, 'x'),
-      y: fnMid(p2, p3, 'y')
-    },
-    s3 = {
-      x: fnMid(p3, p1, 'x'),
-      y: fnMid(p3, p1, 'y')
-    };
-  return new Triangle(s1, s2, s3);
-}
-
-Triangle.prototype.getSerpenskiTriangles = function() {
-    var p1 = this.p1, p2 = this.p2, p3 = this.p3;
-    var mt = this.getMidTriangle();
-    var m1 = mt.p1, m2 = mt.p2, m3 = mt.p3;
-    return [
-      //triangle 1
-      new Triangle(
-        {
-          x: p1.x, y: p1.y
-        },
-        {
-          x: m1.x, y: m1.y
-        },
-        {
-          x: m3.x, y: m3.y
-        }
-      ),
-      //triangle 2
-      new Triangle(
-        {
-          x: m1.x, y: m1.y
-        },
-        {
-          x: p2.x, y: p2.y
-        },
-        {
-          x: m2.x, y: m2.y
-        }
-      ),
-      //triangle 3
-      new Triangle(
-        {
-          x: m2.x, y: m2.y
-        },
-        {
-          x: p3.x, y: p3.y
-        },
-        {
-          x: m3.x, y: m3.y
-        }
-      )
-    ];
-};
-
-Triangle.CreateEquilateral = function(side, offset) {
-  var x = 0, y = 0;
-
-  var makePoint = function() {
-    return {
-      x: x + (offset ? offset.x : 0),
-      y: y + (offset ? offset.y : 0)
-    };
-  }
-  var s1 = makePoint();
-
-  x = side/2, y = side * Math.sqrt(3)/2;
-
-  var s2 = makePoint();
-
-  x = side, y = 0;
-
-  var s3 = makePoint();
-
-  return new Triangle(s1, s2, s3);
-};
-
-function Line(p1, p2) {
-  this.p1 = p1;
-  this.p2 = p2;
-}
-
-Line.prototype.to3D = function(plane) {
-  var p1 = this.p1, p2 = this.p2;
-  var ret = null;
-  if(!plane) plane = 'xy';
-  switch (plane) {
-    case 'xy':
-      ret = [
-        new THREE.Vector3(p1.x, p1.y, 0),
-        new THREE.Vector3(p2.x, p2.y, 0)
-      ];
-      break;
-    case 'yz':
-      ret = [
-        new THREE.Vector3(0, p1.x, p1.y),
-        new THREE.Vector3(0, p2.x, p2.y)
-      ];
-    case 'zx':
-      ret = [
-        new THREE.Vector3(p1.y, 0, p1.x),
-        new THREE.Vector3(p2.y, 0, p2.x)
-      ];
-      break;
-  }
-
-  return ret;
-};
-
 function onPageLoad() {
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(
@@ -167,27 +6,38 @@ function onPageLoad() {
     1,
     500
   );
-  // camera = new THREE.OrthographicCamera(
-  //   window.innerWidth / - 2,
-  //   window.innerWidth / 2,
-  //   window.innerHeight / 2,
-  //   window.innerHeight / - 2,
-  //   10, 10000 );
 
-  var renderer = new THREE.WebGLRenderer();
+  var renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true});
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0xcc9966);
   document.body.appendChild(renderer.domElement);
 
-  camera.position.set(-30,30,-30);
-  camera.lookAt(scene.position);
+  var light2 = new THREE.AmbientLight(0xffffff);
+  scene.add(light2);
+  var plane = new THREE.PlaneGeometry(30, 30)
+  var pmat = new THREE.MeshLambertMaterial({
+    color: 0xe7e7e7,
+    side: THREE.DoubleSide
+  });
+  var pmesh = new THREE.Mesh(plane, pmat);
+  pmesh.rotation.x = 0.5 * Math.PI;
+  pmesh.position.z = 7;
+  pmesh.position.x = 7;
+  scene.add(pmesh);
+
+  camera.position.x = campos.position.x;
+  camera.position.y = campos.position.y;
+  camera.position.z = campos.position.z;
+  //camera.lookAt(scene.position);
+  camera.rotation.x = campos.rotation.x;
+  camera.rotation.y = campos.rotation.y;
+  camera.rotation.z = campos.rotation.z;
   var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
   var axes = new THREE.AxisHelper(25);
-  //scene.add(axes);
+  // scene.add(axes);
 
   var matLine = new THREE.LineBasicMaterial({ color: 0xffaabb });
-
-  var t = new Triangle({x: 0, y:0 }, { x: 5, y: Math.sqrt(3)/2 * 10}, {x: 10, y: 0});
 
   function cantor(level, line) {
     var g = new THREE.Geometry();
@@ -212,7 +62,7 @@ function onPageLoad() {
       ls.geometry.vertices = cantorized;
       iterations++;
     }
-    // console.log(ls);
+
     scene.add(ls);
     function cantorize(p1,p2) {
       var p = {x: p1.z, y: p1.y }, q = { x: p2.z, y: p2.y };
@@ -347,12 +197,10 @@ function onPageLoad() {
 
     return points;
   };
-  // var mat1 = new THREE.MeshBasicMaterial({ color: THREE.ColorKeywords['pink']});
-  // var mat2 = new THREE.MeshBasicMaterial({ color: THREE.ColorKeywords['blue']});
 
-  var mat1 = new THREE.MeshLambertMaterial({ color: THREE.ColorKeywords['pink']});
-  // var mat2 = mat1;
-  var mat2 = new THREE.MeshLambertMaterial({ color: THREE.ColorKeywords['purple']});
+  var mat1 = new THREE.MeshLambertMaterial({ color: THREE.ColorKeywords['steelblue']});
+
+  var mat2 = new THREE.MeshLambertMaterial({ color: THREE.ColorKeywords['white']});
 
   // debugger;
   var group = new THREE.Mesh();
@@ -383,11 +231,12 @@ function onPageLoad() {
 
       var innerGeo = inner.extrude(extrusionSettings);
       var innerMesh = new THREE.Mesh(innerGeo, mat2);
+      innerMesh.name = 'innerMesh';
       group.add(mesh, innerMesh);
   }
-  // var g = group.clone();
-  // g.rotateY(Math.PI/2);
+
   scene.add(group);
+
   var vertices = v;
   for(var i = 2, j = vertices.length; i < j; i+=2) {
     var p = vertices[i];
@@ -395,16 +244,48 @@ function onPageLoad() {
     clone.translateZ(p.z);
     scene.add(clone);
   }
-  // cantor(2, [{x: 0, y:0}, {x: 10, y: 0}]);
-  var light = new THREE.AmbientLight(0xeeeeee);
-  scene.add(light);
+
+  //wireframes for inside triangles
+  var wfs = [];
+  scene.traverse(function(obj){
+    if(obj.name === 'innerMesh') {
+      wfs.push(new THREE.WireframeHelper(obj, 0));
+    }
+  });
+
+  scene.add.apply(scene, wfs);
+
   animate();
 
   function animate () {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
   }
-
+  // window.getCameraPos = function(){
+  //   var obj = {
+  //     position: camera.position,
+  //     rotation: camera.rotation
+  //   }
+  //   return JSON.stringify(obj, null, 2);
+  // };
+  //
+  // window.getDataUrl = function() {
+  //   return renderer.domElement.toDataURL();
+  // }
 }
 
 window.addEventListener('load', onPageLoad, false);
+
+var campos = {
+  "position": {
+    "x": -5.926830149216348,
+    "y": 10.091169312472267,
+    "z": -16.419245246319555
+  },
+  "rotation": {
+    "x": -2.7126232034950766,
+    "y": -0.46531186432642535,
+    "z": -2.939178570876481,
+    "_order": "XYZ"
+  }
+};
